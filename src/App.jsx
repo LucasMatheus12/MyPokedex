@@ -4,28 +4,68 @@ import './App.css'
 
 function App() {
   const [pokemonList, setPokemonList] = useState([])
+  const [selectedPokemon, setSelectedPokemon] = useState(null);
+  const [offset, setOffset] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const apiUrl = 'https://pokeapi.co/api/v2/pokemon'
 
   useEffect(() => {
-    axios.get('https://pokeapi.co/api/v2/pokemon')
-          .then(response => {
-            console.log(response);
-            setPokemonList(response.data.results);
-          })
+    loadPokemonList();
+  }, [offset])
 
-          .catch(error => {
-            console.log(error)
-          })
+  const loadPokemonList = () => {
+    setLoading(true);
+    axios.get(`${apiUrl}?limit=10&offset=${offset}`)
+      .then(response => {
+        setPokemonList(prevState => [...prevState, ...response.data.results]);
+        setLoading(false)
+      })
 
-  }, ['https://pokeapi.co/api/v2/pokemon']); 
+      .catch(error => {
+        console.error(error);
+        setLoading(false);
+      });
+  };
+
+  const loadPokemon = (url) => {
+    axios.get(url)
+      .then(response => {
+        setSelectedPokemon(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
   return (
-    <>
-    <ul>
-      {pokemonList.map(pokemon => (
-        <li key={pokemon.name}> {pokemon.name}</li>
-      ))}
-    </ul>
-    </>
-  )
+    <div>
+      <ul>
+        {pokemonList.map(pokemon => (
+          <li key={pokemon}>  
+            <button onClick={() => loadPokemon(pokemon.url)}>{pokemon.name}</button> 
+          </li>
+        ))}
+      </ul>
+
+    {loading && <p> Carregando...</p>}
+    {!loading && (
+      <div>
+      {selectedPokemon ? (
+        <div>
+        <p>Nome: {selectedPokemon.name}</p>
+        <p>Tipos: {selectedPokemon.types.map(type => type.type.name).join(', ')}</p>
+              <p>Peso: {selectedPokemon.weight} kg</p>
+              <p>Altura: {selectedPokemon.height} m</p>
+        </div>
+      ) : (
+        <p>Selecione um Pokémon para visualizar as informações</p>
+        )}
+
+        </div>
+    )}
+      
+    </div>
+  );
 }
 
-export default App
+export default App;
