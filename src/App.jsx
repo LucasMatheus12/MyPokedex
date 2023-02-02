@@ -40,30 +40,30 @@ function App() {
   return (
     <div>
       <ul>
-        {pokemonList.map(pokemon => (
-          <li key={pokemon}>  
-            <button onClick={() => loadPokemon(pokemon.url)}>{pokemon.name}</button> 
+        {pokemonList.map((pokemon, index) => (
+          <li key={index}>
+            <button onClick={() => loadPokemon(pokemon.url)}>{pokemon.name}</button>
           </li>
         ))}
       </ul>
 
-    {loading && <p> Carregando...</p>}
-    {!loading && (
-      <div>
-      {selectedPokemon ? (
+      {loading && <p> Carregando...</p>}
+      {!loading && (
         <div>
-        <p>Nome: {selectedPokemon.name}</p>
-        <p>Tipos: {selectedPokemon.types.map(type => type.type.name).join(', ')}</p>
+          {selectedPokemon ? (
+            <div>
+              <p>Nome: {selectedPokemon.name}</p>
+              <p>Tipos: {selectedPokemon.types.map(type => type.type.name).join(', ')}</p>
               <p>Peso: {selectedPokemon.weight} kg</p>
               <p>Altura: {selectedPokemon.height} m</p>
-        </div>
-      ) : (
-        <p>Selecione um Pokémon para visualizar as informações</p>
-        )}
+            </div>
+          ) : (
+            <p>Selecione um Pokémon para visualizar as informações</p>
+          )}
 
         </div>
-    )}
-      
+      )}
+
     </div>
   );
 }
