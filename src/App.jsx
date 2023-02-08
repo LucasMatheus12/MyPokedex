@@ -47,6 +47,11 @@ function App() {
         ))}
       </ul>
 
+      <div>
+        <button disabled={offset === 0} onClick={() => setOffset(offset - 10)}>Anterior</button>
+        <button disabled={loading} onClick={() => setOffset(offset + 10)}>Próximo</button>
+      </div>
+
       {loading && <p> Carregando...</p>}
       {!loading && (
         <div>
@@ -56,6 +61,7 @@ function App() {
               <p>Tipos: {selectedPokemon.types.map(type => type.type.name).join(', ')}</p>
               <p>Peso: {selectedPokemon.weight} kg</p>
               <p>Altura: {selectedPokemon.height} m</p>
+              <img src= {selectedPokemon.sprites.front_default}/>
             </div>
           ) : (
             <p>Selecione um Pokémon para visualizar as informações</p>
